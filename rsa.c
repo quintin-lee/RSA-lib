@@ -135,9 +135,9 @@ void rsa_encrypt(rsa_public_key_t* pbk, mpz_t c, mpz_t m)
 	mpz_powm(c, m, pbk->e, pbk->n);
 }
 
-void rsa_decrypt(rsa_private_key_t* prk, mpz_t pt, mpz_t ct)
+void rsa_decrypt(rsa_private_key_t* prk, mpz_t m, mpz_t c)
 {
 	// m = c^d (mod n)
-	mpz_powm(pt, ct, prk->d, prk->n);
+	mpz_powm(m, c, prk->d, prk->n);
 }
 
