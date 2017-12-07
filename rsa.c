@@ -29,12 +29,8 @@ void rsa_random_prime(mpz_t x, mp_bitcnt_t n)
 	// get a pointer to the x limb array
 	mp_limb_t* x_lp = mpz_limbs_write(x, size);
 
-	// set the first limb to zero
-	// this will prevent overflows finding the next prime number
-	x_lp[0] = (mp_limb_t)0;
-	
 	// generate a random number
-	for(mp_size_t i = 1; i < size; ++i)
+	for(mp_size_t i = 0; i < size; ++i)
 	{
 		// use hardware generated random numbers
 		_rdrand64_step(&x_lp[i]);
