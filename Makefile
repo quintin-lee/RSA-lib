@@ -6,7 +6,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -O2
 
 # target architecture
-ARCH = -march=ivybridge
+ARCH = -march=native
 
 .PHONY: clean
 
