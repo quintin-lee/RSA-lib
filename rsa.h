@@ -1,7 +1,4 @@
 
-///
-/// \file rsa.h
-///
 
 /*
 	RSA-lib - Copyright (c) 2017 loreloc - lorenzoloconte@outlook.it
@@ -23,29 +20,15 @@
 	3. This notice may not be removed or altered from any source distribution.
 */
 
+///
+/// \file rsa.h
+///
+
 #pragma once
 
 #include <stdint.h>
 #include <immintrin.h>
 #include <gmp.h>
-
-/// \brief RSA public key (n, e)
-///
-typedef struct
-{
-	mpz_t n; ///< Modulus
-	mpz_t e; ///< Public exponent
-
-} rsa_public_key_t;
-
-/// \brief RSA private key (n, d)
-///
-typedef struct
-{
-	mpz_t n; ///< Modulus
-	mpz_t d; ///< Private exponent
-
-} rsa_private_key_t;
 
 /// \brief RSA key size, the size in bits of modulus n
 ///
@@ -60,6 +43,28 @@ typedef enum
 	RSA_KEY_16384 = (1 << 14)  ///< 16384 bits
 
 } rsa_key_size;
+
+/// \brief RSA public key (n, e)
+///
+typedef struct
+{
+	rsa_key_size s; ///< Size of the key
+
+	mpz_t n; ///< Modulus
+	mpz_t e; ///< Public exponent
+
+} rsa_public_key_t;
+
+/// \brief RSA private key (n, d)
+///
+typedef struct
+{
+	rsa_key_size s; ///< Size of the key
+
+	mpz_t n; ///< Modulus
+	mpz_t d; ///< Private exponent
+
+} rsa_private_key_t;
 
 /// \brief Generate the public key and the private key
 /// \param pbk The public key to generate pointer
@@ -80,14 +85,24 @@ void rsa_destroy_private_key(rsa_private_key_t* prk);
 
 /// \brief Encrypt a message
 /// \param pbk The public key pointer
-/// \param c The chipertext
-/// \param m The plaintext
+/// \param c The chipertext buffer
+/// \param m The plaintext buffer
+/// \param size The size of the plaintext buffer
 ///
-void rsa_encrypt(rsa_public_key_t* pbk, mpz_t c, mpz_t m);
+void rsa_encrypt(rsa_public_key_t* pbk, uint8_t* c, uint8_t* m, size_t size);
 
 /// \brief Decrypt a message
 /// \param prk The private key pointer
-/// \param m The plaintext
-/// \param c The chipertext
+/// \param m The plaintext buffer
+/// \param c The chipertext buffer
+/// \param size The size of the chipertext buffer
 ///
-void rsa_decrypt(rsa_private_key_t* prk, mpz_t m, mpz_t c);
+void rsa_decrypt(rsa_private_key_t* prk, uint8_t* m, uint8_t* c, size_t size);
+
+/// \brief Calculate the chipertext buffer size
+/// \param pbk The public key pointer
+/// \param size The size of the plaintext buffer
+///
+size_t rsa_chipertext_size(rsa_public_key_t* pbk, size_t size);
+
+

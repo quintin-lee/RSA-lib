@@ -109,6 +109,10 @@ void rsa_generate_keys(rsa_public_key_t* pbk, rsa_private_key_t* prk, rsa_key_si
 	// find d such that e*d = 1 (mod phi(n))
 	mpz_invert(prk->d, pbk->e, phi);
 
+	// set the keys size
+	pbk->s = ks;
+	prk->s = ks;
+
 	// clear stuff
 	mpz_clear(p);
 	mpz_clear(q);
@@ -129,15 +133,90 @@ void rsa_destroy_private_key(rsa_private_key_t* prk)
 	mpz_clear(prk->d);
 }
 
-void rsa_encrypt(rsa_public_key_t* pbk, mpz_t c, mpz_t m)
+void rsa_encrypt(rsa_public_key_t* pbk, uint8_t* c, uint8_t* m, size_t size)
 {
-	// c = m^e (mod n)
-	mpz_powm(c, m, pbk->e, pbk->n);
+	// the key size in bytes
+	mp_size_t ksize = (mp_bitcnt_t)pbk->s / 8;
+
+	// the size of the slice to encrypt
+	mp_size_t m_slice_size = ksize - sizeof(uint8_t);
+
+	// the number of complete slices to encrypt
+	mp_size_t m_slices_cnt = size / m_slice_size;
+
+	// last slice size to encrypt
+	mp_size_t m_last_slice_size = size - m_slices_cnt * m_slice_size;
+
+	// the size of the encrypted slice
+	mp_size_t c_slice_size = ksize;
+
+	// the last pointer
+	uint8_t* m_last = m + m_slices_cnt * m_slice_size;
+
+	mpz_t data;
+	mpz_init(data);
+
+	while(m != m_last)
+	{
+		mpz_import(data, m_slice_size, -1, sizeof(uint8_t), 0, 0, m);
+
+		// encrypt data
+		mpz_powm(data, data, pbk->e, pbk->n);
+
+		mpz_export(c, NULL, -1, sizeof(uint8_t), 0, 0, data);
+
+		m += m_slice_size;
+		c += c_slice_size;
+	}
+
+	if(m_last_slice_size != 0)
+	{
+		mpz_import(data, m_last_slice_size, -1, sizeof(uint8_t), 0, 0, m);
+
+		// encrypt data
+		mpz_powm(data, data, pbk->e, pbk->n);
+
+		mpz_export(c, NULL, -1, sizeof(uint8_t), 0, 0, data);
+	}
+
+	mpz_clear(data);
 }
 
-void rsa_decrypt(rsa_private_key_t* prk, mpz_t m, mpz_t c)
+void rsa_decrypt(rsa_private_key_t* prk, uint8_t* m, uint8_t* c, size_t size)
 {
-	// m = c^d (mod n)
-	mpz_powm(m, c, prk->d, prk->n);
+	// the size of the encrypted slice
+	mp_size_t c_slice_size = (mp_bitcnt_t)prk->s / 8;
+
+	// the last pointer
+	uint8_t* c_last = c + size;
+
+	mpz_t data;
+	mpz_init(data);
+
+	// the size of the decrypted slice
+	size_t m_slice_size;
+
+	while(c != c_last)
+	{
+		mpz_import(data, c_slice_size, -1, sizeof(uint8_t), 0, 0, c);
+
+		// decrypt data
+		mpz_powm(data, data, prk->d, prk->n);
+
+		mpz_export(m, &m_slice_size, -1, sizeof(uint8_t), 0, 0, data);
+
+		c += c_slice_size;
+		m += m_slice_size;
+	}
+
+	mpz_clear(data);
+}
+
+size_t rsa_chipertext_size(rsa_public_key_t* pbk, size_t size)
+{
+	// the key size in bytes
+	mp_size_t ksize = (mp_bitcnt_t)pbk->s / 8;
+
+	return ((size / ksize) + 1) * ksize;
 }
 
