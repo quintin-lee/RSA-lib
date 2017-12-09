@@ -67,6 +67,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;stdint.h&gt;</code><br />
+<code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &lt;immintrin.h&gt;</code><br />
 <code>#include &lt;gmp.h&gt;</code><br />
 </div>
@@ -108,15 +109,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a607c2c9df82e61f01ac8c65c82b1ac38"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rsa_8h.html#a607c2c9df82e61f01ac8c65c82b1ac38">rsa_destroy_private_key</a> (<a class="el" href="structrsa__private__key__t.html">rsa_private_key_t</a> *prk)</td></tr>
 <tr class="memdesc:a607c2c9df82e61f01ac8c65c82b1ac38"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy the private key.  <a href="#a607c2c9df82e61f01ac8c65c82b1ac38">More...</a><br /></td></tr>
 <tr class="separator:a607c2c9df82e61f01ac8c65c82b1ac38"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a92324181ddd823987bfa7faa792b86aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rsa_8h.html#a92324181ddd823987bfa7faa792b86aa">rsa_encrypt</a> (<a class="el" href="structrsa__public__key__t.html">rsa_public_key_t</a> *pbk, uint8_t *c, uint8_t *m, size_t size)</td></tr>
-<tr class="memdesc:a92324181ddd823987bfa7faa792b86aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encrypt a message.  <a href="#a92324181ddd823987bfa7faa792b86aa">More...</a><br /></td></tr>
-<tr class="separator:a92324181ddd823987bfa7faa792b86aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac69a2b11f685c3ef88cc59f381538e65"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rsa_8h.html#ac69a2b11f685c3ef88cc59f381538e65">rsa_decrypt</a> (<a class="el" href="structrsa__private__key__t.html">rsa_private_key_t</a> *prk, uint8_t *m, uint8_t *c, size_t size)</td></tr>
-<tr class="memdesc:ac69a2b11f685c3ef88cc59f381538e65"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decrypt a message.  <a href="#ac69a2b11f685c3ef88cc59f381538e65">More...</a><br /></td></tr>
-<tr class="separator:ac69a2b11f685c3ef88cc59f381538e65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a23788a63000db8b1583147903bdf4a4d"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rsa_8h.html#a23788a63000db8b1583147903bdf4a4d">rsa_chipertext_size</a> (<a class="el" href="structrsa__public__key__t.html">rsa_public_key_t</a> *pbk, size_t size)</td></tr>
-<tr class="memdesc:a23788a63000db8b1583147903bdf4a4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculate the chipertext buffer size.  <a href="#a23788a63000db8b1583147903bdf4a4d">More...</a><br /></td></tr>
-<tr class="separator:a23788a63000db8b1583147903bdf4a4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2851cf53d2e3d3c409b817317d4ef7c1"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rsa_8h.html#a2851cf53d2e3d3c409b817317d4ef7c1">rsa_encrypt</a> (<a class="el" href="structrsa__public__key__t.html">rsa_public_key_t</a> pbk, uint8_t *m, size_t m_size, size_t *c_size)</td></tr>
+<tr class="memdesc:a2851cf53d2e3d3c409b817317d4ef7c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encrypt a message.  <a href="#a2851cf53d2e3d3c409b817317d4ef7c1">More...</a><br /></td></tr>
+<tr class="separator:a2851cf53d2e3d3c409b817317d4ef7c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab410ac8d48aa418820627ae96dfc3ac2"><td class="memItemLeft" align="right" valign="top">uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="rsa_8h.html#ab410ac8d48aa418820627ae96dfc3ac2">rsa_decrypt</a> (<a class="el" href="structrsa__private__key__t.html">rsa_private_key_t</a> prk, uint8_t *c, size_t c_size, size_t *m_size)</td></tr>
+<tr class="memdesc:ab410ac8d48aa418820627ae96dfc3ac2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Decrypt a message.  <a href="#ab410ac8d48aa418820627ae96dfc3ac2">More...</a><br /></td></tr>
+<tr class="separator:ab410ac8d48aa418820627ae96dfc3ac2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="a25ab6772e2933a07b6cd2118117b1c5f"></a>
@@ -152,197 +150,6 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="a23788a63000db8b1583147903bdf4a4d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a23788a63000db8b1583147903bdf4a4d">&#9670;&nbsp;</a></span>rsa_chipertext_size()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t rsa_chipertext_size </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structrsa__public__key__t.html">rsa_public_key_t</a> *&#160;</td>
-          <td class="paramname"><em>pbk</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>size</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Calculate the chipertext buffer size. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pbk</td><td>The public key pointer </td></tr>
-    <tr><td class="paramname">size</td><td>The size of the plaintext buffer </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ac69a2b11f685c3ef88cc59f381538e65"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac69a2b11f685c3ef88cc59f381538e65">&#9670;&nbsp;</a></span>rsa_decrypt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rsa_decrypt </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structrsa__private__key__t.html">rsa_private_key_t</a> *&#160;</td>
-          <td class="paramname"><em>prk</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>m</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>c</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>size</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Decrypt a message. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">prk</td><td>The private key pointer </td></tr>
-    <tr><td class="paramname">m</td><td>The plaintext buffer </td></tr>
-    <tr><td class="paramname">c</td><td>The chipertext buffer </td></tr>
-    <tr><td class="paramname">size</td><td>The size of the chipertext buffer </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a607c2c9df82e61f01ac8c65c82b1ac38"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a607c2c9df82e61f01ac8c65c82b1ac38">&#9670;&nbsp;</a></span>rsa_destroy_private_key()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rsa_destroy_private_key </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structrsa__private__key__t.html">rsa_private_key_t</a> *&#160;</td>
-          <td class="paramname"><em>prk</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Destroy the private key. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">prk</td><td>The private key to destroy pointer </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a33c71a0070a5ef4d3cf07b2508719466"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a33c71a0070a5ef4d3cf07b2508719466">&#9670;&nbsp;</a></span>rsa_destroy_public_key()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rsa_destroy_public_key </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structrsa__public__key__t.html">rsa_public_key_t</a> *&#160;</td>
-          <td class="paramname"><em>pbk</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Destroy the public key. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pbk</td><td>The public key to destroy pointer </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a92324181ddd823987bfa7faa792b86aa"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92324181ddd823987bfa7faa792b86aa">&#9670;&nbsp;</a></span>rsa_encrypt()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void rsa_encrypt </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="structrsa__public__key__t.html">rsa_public_key_t</a> *&#160;</td>
-          <td class="paramname"><em>pbk</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>c</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">uint8_t *&#160;</td>
-          <td class="paramname"><em>m</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">size_t&#160;</td>
-          <td class="paramname"><em>size</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Encrypt a message. </p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">pbk</td><td>The public key pointer </td></tr>
-    <tr><td class="paramname">c</td><td>The chipertext buffer </td></tr>
-    <tr><td class="paramname">m</td><td>The plaintext buffer </td></tr>
-    <tr><td class="paramname">size</td><td>The size of the plaintext buffer </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
 <a id="aba2455efd20d1fe78dc17a54c3947273"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aba2455efd20d1fe78dc17a54c3947273">&#9670;&nbsp;</a></span>rsa_generate_keys()</h2>
 
@@ -378,12 +185,168 @@ Functions</h2></td></tr>
 <p>Generate the public key and the private key. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">pbk</td><td>The public key to generate pointer </td></tr>
-    <tr><td class="paramname">prk</td><td>The private key to generate pointer </td></tr>
-    <tr><td class="paramname">ks</td><td>The size of the key </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">pbk</td><td>The public key to generate pointer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">prk</td><td>The private key to generate pointer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ks</td><td>The size of the key </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a33c71a0070a5ef4d3cf07b2508719466"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33c71a0070a5ef4d3cf07b2508719466">&#9670;&nbsp;</a></span>rsa_destroy_public_key()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rsa_destroy_public_key </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structrsa__public__key__t.html">rsa_public_key_t</a> *&#160;</td>
+          <td class="paramname"><em>pbk</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destroy the public key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">pbk</td><td>The public key to destroy pointer </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a607c2c9df82e61f01ac8c65c82b1ac38"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a607c2c9df82e61f01ac8c65c82b1ac38">&#9670;&nbsp;</a></span>rsa_destroy_private_key()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void rsa_destroy_private_key </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structrsa__private__key__t.html">rsa_private_key_t</a> *&#160;</td>
+          <td class="paramname"><em>prk</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Destroy the private key. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">prk</td><td>The private key to destroy pointer </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2851cf53d2e3d3c409b817317d4ef7c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2851cf53d2e3d3c409b817317d4ef7c1">&#9670;&nbsp;</a></span>rsa_encrypt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t* rsa_encrypt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structrsa__public__key__t.html">rsa_public_key_t</a>&#160;</td>
+          <td class="paramname"><em>pbk</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>m</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>m_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>c_size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Encrypt a message. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">pbk</td><td>The public key </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">m</td><td>Plaintext buffer pointer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">m_size</td><td>Plaintext buffer size </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">c_size</td><td>Chipertext buffer size </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the chipertext buffer </dd></dl>
+
+</div>
+</div>
+<a id="ab410ac8d48aa418820627ae96dfc3ac2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab410ac8d48aa418820627ae96dfc3ac2">&#9670;&nbsp;</a></span>rsa_decrypt()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t* rsa_decrypt </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structrsa__private__key__t.html">rsa_private_key_t</a>&#160;</td>
+          <td class="paramname"><em>prk</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>c</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>c_size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t *&#160;</td>
+          <td class="paramname"><em>m_size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Decrypt a message. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">prk</td><td>The public key </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">c</td><td>Chipertext buffer pointer </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">c_size</td><td>Chipertext buffer size </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">m_size</td><td>Plaintext buffer size </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pointer to the plaintext buffer </dd></dl>
 
 </div>
 </div>

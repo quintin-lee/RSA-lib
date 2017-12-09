@@ -68,24 +68,24 @@ typedef struct
 } rsa_private_key_t;
 
 /// \brief Generate the public key and the private key
-/// \param pbk The public key to generate pointer
-/// \param prk The private key to generate pointer
-/// \param ks  The size of the key
+/// \param[in] pbk The public key to generate pointer
+/// \param[in] prk The private key to generate pointer
+/// \param[in] ks  The size of the key
 ///
 void rsa_generate_keys(rsa_public_key_t* pbk, rsa_private_key_t* prk, rsa_key_size ks);
 
 /// \brief Destroy the public key
-/// \param pbk The public key to destroy pointer
+/// \param[in] pbk The public key to destroy pointer
 ///
 void rsa_destroy_public_key(rsa_public_key_t* pbk);
 
 /// \brief Destroy the private key
-/// \param prk The private key to destroy pointer
+/// \param[in] prk The private key to destroy pointer
 ///
 void rsa_destroy_private_key(rsa_private_key_t* prk);
 
 /// \brief Encrypt a message
-/// \param pbk The public key
+/// \param[in] pbk The public key
 /// \param[in] m Plaintext buffer pointer
 /// \param[in] m_size Plaintext buffer size
 /// \param[out] c_size Chipertext buffer size
@@ -94,7 +94,7 @@ void rsa_destroy_private_key(rsa_private_key_t* prk);
 uint8_t* rsa_encrypt(rsa_public_key_t pbk, uint8_t* m, size_t m_size, size_t* c_size);
 
 /// \brief Decrypt a message
-/// \param prk The public key
+/// \param[in] prk The public key
 /// \param[in] c Chipertext buffer pointer
 /// \param[in] c_size Chipertext buffer size
 /// \param[out] m_size Plaintext buffer size
