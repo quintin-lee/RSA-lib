@@ -133,90 +133,134 @@ void rsa_destroy_private_key(rsa_private_key_t* prk)
 	mpz_clear(prk->d);
 }
 
-void rsa_encrypt(rsa_public_key_t* pbk, uint8_t* c, uint8_t* m, size_t size)
+uint8_t* rsa_encrypt(rsa_public_key_t pbk, uint8_t* m, size_t m_size, size_t* c_size)
 {
 	// the key size in bytes
-	mp_size_t ksize = (mp_bitcnt_t)pbk->s / 8;
+	size_t ksize = (mp_bitcnt_t)pbk.s / 8;
 
 	// the size of the slice to encrypt
-	mp_size_t m_slice_size = ksize - sizeof(uint8_t);
+	size_t m_slice_size = ksize - 1;
 
-	// the number of complete slices to encrypt
-	mp_size_t m_slices_cnt = size / m_slice_size;
+	// the number of slices to encrypt
+	size_t m_slices_cnt = m_size / m_slice_size;
 
-	// last slice size to encrypt
-	mp_size_t m_last_slice_size = size - m_slices_cnt * m_slice_size;
+	// last slice to encrypt size
+	size_t m_last_slice_size = m_size - m_slices_cnt * m_slice_size;
 
-	// the size of the encrypted slice
-	mp_size_t c_slice_size = ksize;
+	// the number of chipertext slices
+	size_t c_slices_cnt = (m_last_slice_size == 0) ? m_slices_cnt : (m_slices_cnt + 1);
 
-	// the last pointer
+	// calculate the size of the chipertext buffer
+	*c_size = c_slices_cnt * ksize;
+
+	// create the chipertext buffer
+	uint8_t* c_buffer = (uint8_t*)calloc(*c_size, sizeof(uint8_t));
+
+	if(!c_buffer)
+	{
+		*c_size = 0;
+
+		return NULL;
+	}
+
+	// the plaintext last pointer
 	uint8_t* m_last = m + m_slices_cnt * m_slice_size;
+
+	// the chipertext pointer
+	uint8_t* c = c_buffer;
 
 	mpz_t data;
 	mpz_init(data);
 
+	// encrypt all the slices
 	while(m != m_last)
 	{
 		mpz_import(data, m_slice_size, -1, sizeof(uint8_t), 0, 0, m);
 
 		// encrypt data
-		mpz_powm(data, data, pbk->e, pbk->n);
+		mpz_powm(data, data, pbk.e, pbk.n);
 
 		mpz_export(c, NULL, -1, sizeof(uint8_t), 0, 0, data);
 
 		m += m_slice_size;
-		c += c_slice_size;
+		c += ksize;
 	}
 
+	// encrypt the last slice
 	if(m_last_slice_size != 0)
 	{
 		mpz_import(data, m_last_slice_size, -1, sizeof(uint8_t), 0, 0, m);
 
 		// encrypt data
-		mpz_powm(data, data, pbk->e, pbk->n);
+		mpz_powm(data, data, pbk.e, pbk.n);
 
 		mpz_export(c, NULL, -1, sizeof(uint8_t), 0, 0, data);
 	}
 
 	mpz_clear(data);
+
+	return c_buffer;
 }
 
-void rsa_decrypt(rsa_private_key_t* prk, uint8_t* m, uint8_t* c, size_t size)
+uint8_t* rsa_decrypt(rsa_private_key_t prk, uint8_t* c, size_t c_size, size_t* m_size)
 {
-	// the size of the encrypted slice
-	mp_size_t c_slice_size = (mp_bitcnt_t)prk->s / 8;
+	// the key size in bytes
+	size_t ksize = (mp_bitcnt_t)prk.s / 8;
 
-	// the last pointer
-	uint8_t* c_last = c + size;
+	// create the plaintext buffer
+	uint8_t* m_buffer = (uint8_t*)calloc(0, sizeof(uint8_t));
+
+	// set to zero the plaintext buffer size
+	*m_size = 0;
+
+	if(!m_buffer)
+	{
+		return NULL;
+	}
+
+	// the chipertext last pointer
+	uint8_t* c_last = c + c_size;
 
 	mpz_t data;
 	mpz_init(data);
 
-	// the size of the decrypted slice
-	size_t m_slice_size;
-
+	// decrypt all the slices
 	while(c != c_last)
 	{
-		mpz_import(data, c_slice_size, -1, sizeof(uint8_t), 0, 0, c);
+		mpz_import(data, ksize, -1, sizeof(uint8_t), 0, 0, c);
 
 		// decrypt data
-		mpz_powm(data, data, prk->d, prk->n);
+		mpz_powm(data, data, prk.d, prk.n);
 
-		mpz_export(m, &m_slice_size, -1, sizeof(uint8_t), 0, 0, data);
+		// the last plaintext buffer size
+		size_t m_last_size = *m_size;
 
-		c += c_slice_size;
-		m += m_slice_size;
+		// the size of the decrypted slice
+		size_t m_slice_size = (mpz_sizeinbase(data, 2) / 8 + 1);
+
+		// increment the plaintext buffer size
+		*m_size += m_slice_size;
+
+		// expand the plaintext buffer
+		m_buffer = (uint8_t*)realloc(m_buffer, *m_size);
+
+		if(!m_buffer)
+		{
+			*m_size = 0;
+			
+			break;
+		}
+
+		// the pointer of the destination slice
+		uint8_t* m_slice = m_buffer + m_last_size;
+
+		mpz_export(m_slice, NULL, -1, sizeof(uint8_t), 0, 0, data);
+
+		c += ksize;
 	}
 
 	mpz_clear(data);
-}
 
-size_t rsa_chipertext_size(rsa_public_key_t* pbk, size_t size)
-{
-	// the key size in bytes
-	mp_size_t ksize = (mp_bitcnt_t)pbk->s / 8;
-
-	return ((size / ksize) + 1) * ksize;
+	return m_buffer;
 }
 

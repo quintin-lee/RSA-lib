@@ -27,6 +27,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <immintrin.h>
 #include <gmp.h>
 
@@ -84,25 +85,22 @@ void rsa_destroy_public_key(rsa_public_key_t* pbk);
 void rsa_destroy_private_key(rsa_private_key_t* prk);
 
 /// \brief Encrypt a message
-/// \param pbk The public key pointer
-/// \param c The chipertext buffer
-/// \param m The plaintext buffer
-/// \param size The size of the plaintext buffer
+/// \param pbk The public key
+/// \param[in] m Plaintext buffer pointer
+/// \param[in] m_size Plaintext buffer size
+/// \param[out] c_size Chipertext buffer size
+/// \return A pointer to the chipertext buffer
 ///
-void rsa_encrypt(rsa_public_key_t* pbk, uint8_t* c, uint8_t* m, size_t size);
+uint8_t* rsa_encrypt(rsa_public_key_t pbk, uint8_t* m, size_t m_size, size_t* c_size);
 
 /// \brief Decrypt a message
-/// \param prk The private key pointer
-/// \param m The plaintext buffer
-/// \param c The chipertext buffer
-/// \param size The size of the chipertext buffer
+/// \param prk The public key
+/// \param[in] c Chipertext buffer pointer
+/// \param[in] c_size Chipertext buffer size
+/// \param[out] m_size Plaintext buffer size
+/// \return A pointer to the plaintext buffer
 ///
-void rsa_decrypt(rsa_private_key_t* prk, uint8_t* m, uint8_t* c, size_t size);
+uint8_t* rsa_decrypt(rsa_private_key_t prk, uint8_t* c, size_t c_size, size_t* m_size);
 
-/// \brief Calculate the chipertext buffer size
-/// \param pbk The public key pointer
-/// \param size The size of the plaintext buffer
-///
-size_t rsa_chipertext_size(rsa_public_key_t* pbk, size_t size);
 
 
