@@ -232,7 +232,8 @@ uint8_t* rsa_decrypt(rsa_private_key_t prk, uint8_t* c, size_t c_size, size_t* m
 		size_t m_last_size = *m_size;
 
 		// the size of the decrypted slice
-		size_t m_slice_size = (mpz_sizeinbase(data, 2) / 8 + 1);
+		// https://gmplib.org/manual/Integer-Import-and-Export.html
+		size_t m_slice_size = (mpz_sizeinbase(data, 2) + 7) / 8;
 
 		// increment the plaintext buffer size
 		*m_size += m_slice_size;
