@@ -109,10 +109,6 @@ void rsa_generate_keys(rsa_public_key_t* pbk, rsa_private_key_t* prk, rsa_key_si
 	// find d such that e*d = 1 (mod phi(n))
 	mpz_invert(prk->d, pbk->e, phi);
 
-	// set the keys size
-	pbk->s = ks;
-	prk->s = ks;
-
 	// clear stuff
 	mpz_clear(p);
 	mpz_clear(q);
@@ -136,7 +132,7 @@ void rsa_destroy_private_key(rsa_private_key_t* prk)
 uint8_t* rsa_encrypt(rsa_public_key_t pbk, uint8_t* m, size_t m_size, size_t* c_size)
 {
 	// the key size in bytes
-	size_t ksize = (mp_bitcnt_t)pbk.s / 8;
+	size_t ksize = mpz_size(pbk.n) * sizeof(mp_limb_t);
 
 	// the size of the slice to encrypt
 	size_t m_slice_size = ksize - 1;
@@ -205,7 +201,7 @@ uint8_t* rsa_encrypt(rsa_public_key_t pbk, uint8_t* m, size_t m_size, size_t* c_
 uint8_t* rsa_decrypt(rsa_private_key_t prk, uint8_t* c, size_t c_size, size_t* m_size)
 {
 	// the key size in bytes
-	size_t ksize = (mp_bitcnt_t)prk.s / 8;
+	size_t ksize = mpz_size(prk.n) * sizeof(mp_limb_t);
 
 	// create the plaintext buffer
 	uint8_t* m_buffer = (uint8_t*)calloc(0, sizeof(uint8_t));

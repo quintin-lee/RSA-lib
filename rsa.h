@@ -49,8 +49,6 @@ typedef enum
 ///
 typedef struct
 {
-	rsa_key_size s; ///< Size of the key
-
 	mpz_t n; ///< Modulus
 	mpz_t e; ///< Public exponent
 
@@ -60,8 +58,6 @@ typedef struct
 ///
 typedef struct
 {
-	rsa_key_size s; ///< Size of the key
-
 	mpz_t n; ///< Modulus
 	mpz_t d; ///< Private exponent
 
