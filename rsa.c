@@ -24,29 +24,33 @@
 void rsa_random_prime(mpz_t x, mp_bitcnt_t n)
 {
 	// number of limbs
-	mp_size_t size = (n / 8) / sizeof(mp_limb_t);
+	size_t size = (n / 8) / sizeof(mp_limb_t);
 
-	// get a pointer to the x limb array
-	mp_limb_t* x_lp = mpz_limbs_write(x, size);
-
-	// generate a random number
-	for(mp_size_t i = 0; i < size; ++i)
+	do
 	{
-		// use hardware generated random numbers
-		_rdrand64_step(&x_lp[i]);
-	}
+		// get a pointer to the x limb array
+		size_t* x_lp = mpz_limbs_write(x, size);
 
-	// update n limbs
-	mpz_limbs_finish(x, size);
+		// generate a random number
+		for(size_t i = 0; i < size; ++i)
+		{
+			// use hardware generated random numbers
+			_rdrand64_step(&x_lp[i]);
+		}
 
-	// set the lowest bit
-	mpz_setbit(x, 0);
+		// update n limbs
+		mpz_limbs_finish(x, size);
 
-	// set the highest bit
-	mpz_setbit(x, n - 1);
+		// set the lowest bit
+		mpz_setbit(x, 0);
 
-	// find the next prime number
-	mpz_nextprime(x, x);
+		// set the highest bit
+		mpz_setbit(x, n - 1);
+
+		// find the next prime number
+		mpz_nextprime(x, x);
+
+	} while(mpz_sizeinbase(x, 2) > n); // prevent prime overflow
 }
 
 void rsa_generate_keys(rsa_public_key_t* pbk, rsa_private_key_t* prk, rsa_key_size ks)
